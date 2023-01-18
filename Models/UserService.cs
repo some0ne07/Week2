@@ -20,7 +20,7 @@ namespace WebApplication2.Models
         }
         public async Task<List<BsonDocument>> Get()
         {
-            return await collection.Find(new BsonDocument()).Sort("{_id:1}").ToListAsync();
+            return await collection.Find(new BsonDocument()).Sort("{_id:-1}").Limit(1).ToListAsync();
         }
 
         }
