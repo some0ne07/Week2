@@ -1,79 +1,54 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Diagnostics;
-using System.Net.NetworkInformation;
-using System.Text.Json;
 using WebApplication2.Models;
 using MongoDB.Bson;
-using MongoDB.Driver;
-using System.Reflection.Metadata;
-
-
 
 namespace WebApplication2.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly UserService _userService;
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, UserService userService)
         {
             _logger = logger;
+            _userService = userService;
+        }
+        public async Task addocs(User user)
+        {
+            BsonDocument doc = new BsonDocument
+            {
+                { "name", user.name},
+                {"count", user.count}
+            };
+
+            await _userService.Addocs(doc);
         }
 
-        public string ip;
-
-        public string SetIp()
+        [HttpPost]
+        public async Task<ActionResult> Index(User user)
         {
-        ip = Response.HttpContext.Connection.RemoteIpAddress.ToString();
-        return ip;
+            await addocs(user);
+
+            return View();
+        }
+        
+        public IActionResult Index()
+        {
+            return View();
         }
 
-        static string addocs(ref string args)
+        public async Task<IActionResult> Privacy()
         {
-            string i = args;
-            string date = DateTime.Now.ToString();
-            MongoClient dbClient = new MongoClient("mongodb+srv://none:userpassword@cluster0.g4bnbxw.mongodb.net/?retryWrites=true&w=majority");
-
-            var database = dbClient.GetDatabase("user_details");
-            var collection = database.GetCollection<BsonDocument>("User");
-
-            var document = new BsonDocument { { "_id", DateTime.Now.ToString() }
-                , { "ipaddress",i } };
-
-            collection.InsertOne(document);
-
-            return "address of the user";
-
-        }
-
-        static string getdocs()
-        {
-            MongoClient dbClient = new MongoClient("mongodb+srv://none:userpassword@cluster0.g4bnbxw.mongodb.net/?retryWrites=true&w=majority");
-
-            var database = dbClient.GetDatabase("user_details");
-            var collection = database.GetCollection<BsonDocument>("User");
-
-            var dbList = collection.Find(new BsonDocument()).ToList();
+            var dbList = await _userService.Get();
             BsonDocument t = new BsonDocument();
             foreach (var item in dbList)
             {
                 t = item;
             }
-            return $"Date : {t["_id"].ToString()}, Ip Address : {t["ipaddress"].ToString()}";
-
-        }
-
-        public IActionResult Index()
-        {
-            string ip = SetIp();
-            ViewData["as"] = addocs(ref ip);
-            return View();
-        }
-
-        public IActionResult Privacy()
-        {
-            ViewData["ip"] = getdocs();
+            ViewData["name"] = t["name"];
+            ViewData["count"] = t["count"];
             return View();
         }
 

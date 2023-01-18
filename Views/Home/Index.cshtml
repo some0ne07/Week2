@@ -1,8 +1,20 @@
-﻿@{
+﻿@model WebApplication2.Models.User
+@{
     ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
-    <p>Go to <a href="/Home/Privacy">Privacy Page</a> to view the latest Date and Time of entry and IP @ViewData["as"]</p>
+    <p>Go to <a href="/Home/Privacy">Privacy Page</a> to view the latest Date and Time of entry and IP address of the user.</p>
+</div>
+
+<div>
+    @using (Html.BeginForm("Index", "Home", FormMethod.Post))
+    {
+        <h3> Form </h3>
+        @Html.TextBoxFor(m => m.name)
+        @Html.TextBoxFor(m => m.count)
+        <input type="submit" value="Submit">
+
+    }
 </div>

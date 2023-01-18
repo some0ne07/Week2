@@ -3,4 +3,25 @@
 }
 <h1>@ViewData["Title"]</h1>
 
-<p>@ViewData["ip"]</p>
+<script>
+    function help() {
+        var x = document.getElementById("Text");
+        if (x.style.display === "none") {
+            x.style.display = "block";
+        } else {
+            x.style.display = "none";
+        }
+    }
+</script>
+
+<body>
+    <p>
+        <button onclick="help()" style="background-color:white">Name : @ViewData["name"]</button>
+    </p>
+
+
+    <div id="Text" style="display :none">
+        <p>
+            <button onclick="help()" style="background-color:white">Country : @ViewData["count"]</button>
+    </div>
+</body>

@@ -1,7 +1,13 @@
+using WebApplication2.Models;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.Configure<UserDatabaseClass>(
+    builder.Configuration.GetSection("UsersDatabaseClass"));
+builder.Services.AddSingleton<UserService>();
 
 var app = builder.Build();
 
