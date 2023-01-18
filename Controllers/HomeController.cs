@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using WebApplication2.Models;
 using MongoDB.Bson;
+using System.Dynamic;
 
 namespace WebApplication2.Controllers
 {
@@ -46,6 +47,7 @@ namespace WebApplication2.Controllers
             foreach (var item in dbList)
             {
                 t = item;
+
             }
             ViewData["name"] = t["name"];
             ViewData["count"] = t["count"];
